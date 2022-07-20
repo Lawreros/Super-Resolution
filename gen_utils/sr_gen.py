@@ -1,6 +1,10 @@
 ### This is the importable class that is being developed in image_gen_class.ipynb
 ### This will be updated with each stable version of the notebook
 
+# TODO: Add way to load image pair as tensors for easy feeding into model
+# TODO: Include way for repeated unsqueezing of images so that a 2D image
+# can have a sample and channel dimension added to it
+
 import numpy as np
 import os
 import random
@@ -267,7 +271,7 @@ class sr_gen():
         # the images were saved (either as RBG or intensity values or 3D array). 
         # This will help minimize headaches caused by different image types.
 
-        # im_id can either be the index value or the name of the file
+        # im_id can either be the index value or the name of the HR file
         if isinstance(im_id, int):
             HR_file = self.HR_files[im_id]
             LR_file = self.LR_files[im_id]
