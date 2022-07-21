@@ -12,7 +12,7 @@ import shutil
 from matplotlib import pyplot
 from PIL import Image
 import cv2
-from skimage.transform import rotate, AffineTransform, warp
+from skimage.transform import rotate, AffineTransform, warp, rescale
 
 
 class sr_gen():
@@ -164,14 +164,14 @@ class sr_gen():
 
         if self.template['scale'] > 1:
             _a = np.random.randint(1,self.template['scale']+1)
-            transform = AffineTransform(scale=_a)
-            im_h = warp(im_h, transform, mode='reflect')
-            im_l = warp(im_l, transform,mode='reflect')
+            #transform = AffineTransform(scale=_a)
+            im_h = rescale(im_h, scale = _a, mode='reflect')
+            im_l = rescale(im_l, scale = _a, mode='reflect')
             opp+= f'_scale{_a}'
 
         # If rotation was selected
         if self.template['rotation'] > 0:
-            _a = np.random.randint(0,self.template['rotation'])
+            _a = np.random.randint(-self.template['rotation'],self.template['rotation'])
             im_h = rotate(im_h, _a, mode="reflect")
             im_l = rotate(im_l, _a, mode="reflect")
             opp+= f'_rot{_a}'
