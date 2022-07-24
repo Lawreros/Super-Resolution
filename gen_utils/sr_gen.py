@@ -80,8 +80,8 @@ class sr_gen():
             return {'out_type':'png', # png, nii (?), DICOM (?)
                     'unit':'intensity', #Whether you want RBG or Intensity/DICOM units
                     'resolution':2,
-                    'translation_x':10,
-                    'translation_y':10,
+                    'translation_x':0,
+                    'translation_y':0,
                     'rotation':0,
                     'scale':2,
                     'patch':False,
@@ -155,8 +155,8 @@ class sr_gen():
 
         # If shifting in the x or y direction was selected
         if self.template['translation_x'] > 0 | self.template['translation_y'] > 0:
-            _a = np.random.randint(0,self.template['translation_x'])
-            _b = np.random.randint(0,self.template['translation_y'])
+            _a = np.random.randint(-self.template['translation_x'],self.template['translation_x'])
+            _b = np.random.randint(self.template['translation_y'],self.template['translation_y'])
             transform = AffineTransform(translation=(_a, _b))
             im_h = warp(im_h, transform,mode='reflect')
             im_l = warp(im_l, transform,mode='reflect')
