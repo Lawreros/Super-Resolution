@@ -1,6 +1,10 @@
 ### This is the importable class that is being developed in image_gen_class.ipynb
 ### This will be updated with each stable version of the notebook
 
+# TODO: Add way to load image pair as tensors for easy feeding into model
+# TODO: Include way for repeated unsqueezing of images so that a 2D image
+# can have a sample and channel dimension added to it
+
 import numpy as np
 import os
 import random
@@ -8,7 +12,7 @@ import shutil
 from matplotlib import pyplot
 from PIL import Image
 import cv2
-from skimage.transform import rotate, AffineTransform, warp
+from skimage.transform import rotate, AffineTransform, warp, rescale
 
 
 class sr_gen():
@@ -76,8 +80,8 @@ class sr_gen():
             return {'out_type':'png', # png, nii (?), DICOM (?)
                     'unit':'intensity', #Whether you want RBG or Intensity/DICOM units
                     'resolution':2,
-                    'translation_x':10,
-                    'translation_y':10,
+                    'translation_x':0,
+                    'translation_y':0,
                     'rotation':0,
                     'scale':2,
                     'patch':False,
@@ -151,8 +155,8 @@ class sr_gen():
 
         # If shifting in the x or y direction was selected
         if self.template['translation_x'] > 0 | self.template['translation_y'] > 0:
-            _a = np.random.randint(0,self.template['translation_x'])
-            _b = np.random.randint(0,self.template['translation_y'])
+            _a = np.random.randint(-self.template['translation_x'],self.template['translation_x'])
+            _b = np.random.randint(self.template['translation_y'],self.template['translation_y'])
             transform = AffineTransform(translation=(_a, _b))
             im_h = warp(im_h, transform,mode='reflect')
             im_l = warp(im_l, transform,mode='reflect')
@@ -160,14 +164,14 @@ class sr_gen():
 
         if self.template['scale'] > 1:
             _a = np.random.randint(1,self.template['scale']+1)
-            transform = AffineTransform(scale=_a)
-            im_h = warp(im_h, transform, mode='reflect')
-            im_l = warp(im_l, transform,mode='reflect')
+            #transform = AffineTransform(scale=_a)
+            im_h = rescale(im_h, scale = _a, mode='reflect')
+            im_l = rescale(im_l, scale = _a, mode='reflect')
             opp+= f'_scale{_a}'
 
         # If rotation was selected
         if self.template['rotation'] > 0:
-            _a = np.random.randint(0,self.template['rotation'])
+            _a = np.random.randint(-self.template['rotation'],self.template['rotation'])
             im_h = rotate(im_h, _a, mode="reflect")
             im_l = rotate(im_l, _a, mode="reflect")
             opp+= f'_rot{_a}'
@@ -267,7 +271,7 @@ class sr_gen():
         # the images were saved (either as RBG or intensity values or 3D array). 
         # This will help minimize headaches caused by different image types.
 
-        # im_id can either be the index value or the name of the file
+        # im_id can either be the index value or the name of the HR file
         if isinstance(im_id, int):
             HR_file = self.HR_files[im_id]
             LR_file = self.LR_files[im_id]
