@@ -15,7 +15,7 @@ import cv2
 from skimage.transform import rotate, AffineTransform, warp, rescale
 
 
-class SrGen:
+class SrGen:  # pls merge
     def __init__(self, inp_dir, HR_out_dir, LR_out_dir, prefix='', suffix=''):
         """ Class designed to generate Low-Resolution and High-Resolution pairs of input
         images for the purposes of super-resolution models. This class can also be used
