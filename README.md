@@ -1,5 +1,5 @@
 # Super-Resolution Paper Replication
-This repository is ment to contain all of my experimentation with and replication of the different Super-Resolution (SR) papers and concepts that I come across. Each paper will be given its own folder, with a README.md for each which further explains its contents.
+This repository is meant to contain all of my experimentation with and replication of the different Super-Resolution (SR) papers and concepts that I come across. Each paper will be given its own folder, with a README.md for each which further explains its contents.
 
 **Everyone is free to use the code found within this repository as they see fit (depending on the licensing of the codebases/publications I have provided links for), I only ask that you cite the relevant sources for each of these SR implementations (and myself if applicable)**
 
@@ -23,6 +23,9 @@ Summary:
 
 ## Robust Single Image Super-Resolution via Deep Networks With Sparse Prior
 Contained in the `SCN` directory,
+
+Summary:
+2D SR using patches from single images as samples to train a model
 
 ```
 @ARTICLE{7466062,
