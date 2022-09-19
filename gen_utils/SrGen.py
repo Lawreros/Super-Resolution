@@ -184,16 +184,17 @@ class SrGen:
 
 
 
-    def load_image(self, im_path):
+    def load_image(self, im_path, verbose=False):
         # Given an image path, determines the function required to load the contents
         # as a numpy array, which is returned.
         fil_typ = os.path.splitext(im_path)[1]
 
         if fil_typ == '.png':
             # If file is a png
-            print(f'Loading {im_path} as png')
             img = np.array(Image.open(im_path))
-            print(f'Image shape:{img.shape}')
+            if verbose:
+                print(f'Loading {im_path} as png')
+                print(f'Image shape:{img.shape}')
 
             if self.template['unit'] == 'intensity':
                 img = self.rgb2ycrbcr(img)
@@ -204,12 +205,16 @@ class SrGen:
                 pass
 
         elif fil_typ == '.nii' or fil_typ == '.gz':
-            print(f'Loading {im_path} as nii')
             img = nib.load(im_path).get_fdata()
+            if verbose:
+                print(f'Loading {im_path} as nii')
+                print(f'Image shape:{img.shape}')
 
         elif fil_typ == '.dcm':
             img = pydicom.dcmread(im_path).pixel_array
-            print(f'Loading {im_path} as dicom')
+            if verbose:
+                print(f'Loading {im_path} as dicom')
+                print(f'Image shape:{img.shape}')
 
         else:
             raise FileNotFoundError(f'Image file type {fil_typ} not supported.')
