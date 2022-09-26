@@ -69,7 +69,7 @@ The model functions by taking a 2D image which has had it's resolution increased
 
 ```mermaid
   flowchart LR
-  id0["Orig. img:[x/2,y/2]"] --> idb["BiC Interp."] --> id1["2D img:[x,y]"]
+  idz["Orig. img:[x/2,y/2]"] --> idb["BiC Interp."] --> id1["2D img:[x,y]"]
   id1["2D img:[x,y]"] --> id2["patch_1 : [n,n]"] --> id0["SCN"] --> id6["patch_1 : [n,n]"] --> id10["2D img:[x,y]"] 
   id1["2D img:[x,y]"] --> id3["patch_2 : [n,n]"] --> id01["SCN"] --> id7["patch_2 : [n,n]"] --> id10["3D img:[2x,2y,z]"]
   id1["2D img:[x,y]"] --> id4["..."] --> id02["SCN"] --> id8["..."] --> id10["2D img:[x,y]"]
