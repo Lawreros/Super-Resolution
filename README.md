@@ -13,10 +13,11 @@ This paper explores using two seperate 2D SR CNN models to accomplish 3D SR. Eff
 
 ```mermaid
   flowchart LR
-    3D img : [x,y,z] --> [x,y,0] & [x,y,1] & ... & [x,y,z] --> CNN_1 --> [2x,2y,0] & [2x,2y,1] & ... & [2x,2y,z] --> 3D img : [2x,2y,z]
+  id1["This is the (text)[x,y,z] in the box"] --> id2["This is the (text) in the box"]
+   
 ```
 
-
+ 3D img:[x,y,z] --> [x,y,0] & [x,y,1] & ... & [x,y,z] --> CNN_1 --> [2x,2y,0] & [2x,2y,1] & ... & [2x,2y,z] --> 3D img:[2x,2y,z]
 
 ```
 dimensions of input 3D image = [x,y,z]
