@@ -1,5 +1,8 @@
 # Robust Single Image Super-Resolution via Deep Networks With Sparse Prior
 
+https://github.com/huangzehao/SCN_Matlab
+
+
 ## File list:
 - image_generation.ipynb = notebook for generating training and testing image patches from both pngs and nii files
 - MRI_SCN.ipynb = notebook containing both the BSD100 trained model and the MRI-trained model, also includes the training and testing functions
