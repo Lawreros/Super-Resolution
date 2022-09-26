@@ -14,7 +14,7 @@ The `gen_utils` directory contains the classes and functions that I have created
     book={IEEE Access}
 }
 ```
-Contained in the `CNNIL` directory. The citation for the paper is found below, with the offical github repository found here: https://github.com/lilygeorgescu/3d-super-res-cnn
+Contained in the `CNNIL` directory. The citation for the paper is found above, with the offical github repository found here: https://github.com/lilygeorgescu/3d-super-res-cnn
 
 ### Summary: 
 This paper explores using two seperate 2D SR CNN models to accomplish 3D SR. Effectively, if you have a 3D image with axes [x,y,z] and you want to double its size, you first have a model (`CNN_1`) double the height and width of slices along a given axis by treating each slice as a 2D image:
@@ -60,7 +60,7 @@ By combining these two methods, you can effectively do 3D SR using 2D convolutio
   doi={10.1109/TIP.2016.2564643}}
 ```
 
-Contained in the `SCN` directory. The citation for the paper is found below, with the offical github repository found here: https://github.com/huangzehao/SCN_Matlab
+Contained in the `SCN` directory. The citation for the paper is found above, with the offical github repository found here: https://github.com/huangzehao/SCN_Matlab
 
 ### Summary:
 This paper explores using samples from a single 2D image (in the form of patches) and treating them as seperate images for the sake of training a model (`SCN`). Using the assumption that natural images can be sparsely represented, the model trained seeks to find a sparse representation of the patches for use in interpolation (creating the SR image).
@@ -69,12 +69,13 @@ The model functions by taking a 2D image which has had it's resolution increased
 
 ```mermaid
   flowchart LR
+  id0["Orig. img:[x/2,y/2]"] --> idb["BiC Interp."] --> id1["2D img:[x,y]"]
   id1["2D img:[x,y]"] --> id2["patch_1 : [n,n]"] --> id0["SCN"] --> id6["patch_1 : [n,n]"] --> id10["2D img:[x,y]"] 
   id1["2D img:[x,y]"] --> id3["patch_2 : [n,n]"] --> id01["SCN"] --> id7["patch_2 : [n,n]"] --> id10["3D img:[2x,2y,z]"]
   id1["2D img:[x,y]"] --> id4["..."] --> id02["SCN"] --> id8["..."] --> id10["2D img:[x,y]"]
   id1["2D img:[x,y]"] --> id5["patch_z : [n,n]"] --> id03["SCN"] --> id9["patch_z : [n,n]"] --> id10["2D img:[x,y]"]
 ```
-
+This model can also be trained for differnet changes in magintude of resolution (`x3`, `x4`, etc.), but my implementation only deals with `x2` as I "got the picture" after that.
 
 
 
