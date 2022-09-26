@@ -68,6 +68,7 @@ class SrGen:
                 'patch': False, # Have this accept 3 dimensional input [x,y,z], [x,y], or single
                 'step': 10, # Also have this accept 3 dimensional input
                 'keep_blank': False,
+                'blank_ratio': 0.4,
             }
     
     def set_template(self, temp):
@@ -382,7 +383,7 @@ class SrGen:
         #patch_count = np.prod([len(range(0,i,step[idx])) for idx, i in enumerate(dim)])
         print(f'patch guess = {np.prod([math.floor((i-patch_size[idx])/step[idx])+1 for idx,i in enumerate(dim)])}')
         patch_count = np.prod([math.floor((i-patch_size[idx])/step[idx])+1 for idx,i in enumerate(dim)])
-        patch_vol = math.prod(patch_size)*0.4 #TODO: make value changable
+        patch_vol = math.prod(patch_size)*self.template['blank_ratio']
 
         if len(dim) == 2:
             stack = np.zeros(patch_count,patch_size[0],patch_size[1])
@@ -490,12 +491,13 @@ class SrGen:
         return im_h, im_l
 
 
-    def save_image(self, fname, im, verbose = False):
+    def save_image(self, fname, im, form=None, verbose = False):
         # Take a given image and save it as the specified format:
         # fname = output name of the saved file
         # im = numpy array of image
 
-        form = self.template['out_type']
+        if not form:
+            form = self.template['out_type']
 
         dim = im.shape #Get number of dimensions of image
 
