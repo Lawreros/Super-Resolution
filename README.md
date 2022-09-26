@@ -18,10 +18,10 @@ This paper explores using two seperate 2D SR CNN models to accomplish 3D SR. Eff
 
 ```mermaid
   flowchart LR
-  id1["3D img:[x,y,z]"] --> id2["[x,y,0]"] --> id0[CNN_1] -- > id6["[2x,2y,1]"] --> id10["3D img:[2x,2y,z]"] 
-  id1["3D img:[x,y,z]"] --> id3["[x,y,1]"] --> id01[CNN_1] -- > id7["[2x,2y,1]"] --> id10["3D img:[2x,2y,z]"]
-  id1["3D img:[x,y,z]"] --> id4["..."]--> id02[CNN_1] -- > id8["[2x,2y,1]"] --> id10["3D img:[2x,2y,z]"]
-  id1["3D img:[x,y,z]"] --> id5["[x,y,z]"] --> id03[CNN_1] --> id9["[2x,2y,0]"] -- > id9["[2x,2y,1]"] --> id10["3D img:[2x,2y,z]"]
+  id1["3D img:[x,y,z]"] --> id2["[x,y,0]"] --> id0["CNN_1"] -- > id6["[2x,2y,1]"] --> id10["3D img:[2x,2y,z]"] 
+  id1["3D img:[x,y,z]"] --> id3["[x,y,1]"] --> id01["CNN_1"] -- > id7["[2x,2y,1]"] --> id10["3D img:[2x,2y,z]"]
+  id1["3D img:[x,y,z]"] --> id4["..."]--> id02["CNN_1"] -- > id8["[2x,2y,1]"] --> id10["3D img:[2x,2y,z]"]
+  id1["3D img:[x,y,z]"] --> id5["[x,y,z]"] --> id03["CNN_1"] --> id9["[2x,2y,0]"] -- > id9["[2x,2y,1]"] --> id10["3D img:[2x,2y,z]"]
 ```
 
 Then you use a second model which only doubles the remaining dimension of the 3D image by taking 2D slices from a different orientation ()
