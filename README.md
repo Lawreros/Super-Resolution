@@ -1,5 +1,7 @@
 # Super-Resolution Paper Replication
+
 This repository is meant to contain all of my experimentation with (and replication of) the different Super-Resolution (SR) papers and concepts that I come across. Each paper will be given its own folder, with a `README.md` for each which further explains its contents. Please see the end of this `README` for the License Agreement.
+
 
 
 ## General Repo-Specific Custom Code
@@ -40,11 +42,11 @@ Then you use a second model (`CNN_2`) which only doubles the remaining dimension
 
 By combining these two methods, you can effectively do 3D SR using 2D convolutional layers with fewer weights (and thus less training time and resources) than 3D convolutional layers.
 
+
 ```mermaid
   flowchart LR
   id1["3D img:[x,y,z]"] --> id0["CNN_1"] --> id01["CNN_2"] --> id2["3D img:[2x,2y,2z]"]
 ```
-
 
 
 ## 2. Robust Single Image Super-Resolution via Deep Networks With Sparse Prior
@@ -95,3 +97,4 @@ Under the following terms:
  #### NonCommercial — You may not use the material for commercial purposes.
 
  #### ShareAlike — If you remix, transform, or build upon the material, you must distribute your contributions under the same license as the original.
+
