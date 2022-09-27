@@ -17,7 +17,7 @@ The `gen_utils` directory contains the classes and functions that I have created
 Contained in the `CNNIL` directory. The citation for the paper is found above, with the offical github repository found here: https://github.com/lilygeorgescu/3d-super-res-cnn
 
 ### Summary: 
-This paper explores using two seperate 2D SR CNN models to accomplish 3D SR. Effectively, if you have a 3D image with axes [x,y,z] and you want to double its size, you first have a model (`CNN_1`) double the height and width of slices along a given axis by treating each slice as a 2D image:
+This paper explores using two seperate 2D SR Convolutional Neural Network (CNN) models to accomplish 3D SR. Effectively, if you have a 3D image with axes [x,y,z] and you want to double its size, you first have a model (`CNN_1`) double the height and width of slices along a given axis by treating each slice as a 2D image:
 
 
 ```mermaid

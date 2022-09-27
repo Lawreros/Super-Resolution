@@ -10,7 +10,7 @@
 The citation for the paper is found above, with the offical github repository found here: https://github.com/lilygeorgescu/3d-super-res-cnn
 
 ### Summary: 
-This paper explores using two seperate 2D SR CNN models to accomplish 3D SR. Effectively, if you have a 3D image with axes [x,y,z] and you want to double its size, you first have a model (`CNN_1`) double the height and width of slices along a given axis by treating each slice as a 2D image:
+This paper explores using two seperate 2D SR Convolutional Neural Network (CNN) models to accomplish 3D SR. Effectively, if you have a 3D image with axes [x,y,z] and you want to double its size, you first have a model (`CNN_1`) double the height and width of slices along a given axis by treating each slice as a 2D image:
 
 ```mermaid
   flowchart LR
@@ -37,7 +37,12 @@ By combining these two methods, you can effectively do 3D SR using 2D convolutio
   id1["3D img:[x,y,z]"] --> id0["CNN_1"] --> id01["CNN_2"] --> id2["3D img:[2x,2y,2z]"]
 ```
 
-
-
-
 ## File list:
+```
+./main.ipynb : Jupyter notebook used in the creation and training of this SR model type
+
+./CNNIL_save_network1_39.p : Saved weights for the first CNN block
+
+./CNNIL_save_network2_39.p : Saved weights for the second CNN block
+
+```
