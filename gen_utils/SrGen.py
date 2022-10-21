@@ -167,11 +167,11 @@ class SrGen:
                     #         most likely due to resolution scaling or patches/steps not being divisible by resolution''')
 
             elif save:
-                fname_h = self.HR_out_dir + im
+                fname_h = f'{self.HR_out_dir}{im}.{self.template["out_type"]}'
                 self.save_image(fname_h, im_h, verbose)
                 fnames_h.append(fname_h)
                 if self.template['resolution']:# != None:
-                    fname_l = self.LR_out_dir + im
+                    fname_l = f'{self.LR_out_dir}{im}.{self.template["out_type"]}'
                     self.save_image(fname_l, im_l, verbose)
                     fnames_l.append(fname_l)
 
@@ -193,8 +193,8 @@ class SrGen:
             with Image.open(im_path) as f_im:
                 img = np.array(f_im)
 
-            print(f'Loading {im_path} as png')
             if verbose:
+                print(f'Loading {im_path} as png')
                 print(f'Image shape:{img.shape}')
 
             if self.template['unit'] == 'intensity':
