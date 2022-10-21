@@ -112,7 +112,7 @@ class SrGen:
 
 ### ACTUAL IMAGE MANIPULATION BELOW
 
-    def run(self, clear=False, save=False):
+    def run(self, clear=False, save=False, verbose=False):
         # This method is called to generate the data
 
         if clear:
@@ -127,7 +127,7 @@ class SrGen:
         fnames_l = []
 
         for ids, im in enumerate(self.inp_paths):
-            im_h = self.load_image(im)
+            im_h = self.load_image(im, verbose)
             opp, im_h = self.img_transform(im_h)
 
             # Prevents weird new file naming issues when input is compressed file (.nii.gz)
@@ -147,8 +147,6 @@ class SrGen:
                 self.template['resolution'] = [int(x) for x in np.multiply(np.ones(len(dim)), self.template['resolution'])]
 
                 # Check that dimensions of HR image are multiples of resolution change, else shave off data
-                print(dim)
-                print(self.template['resolution'])
                 for i in range(len(dim)):
                     if dim[i] % self.template['resolution'][i]:
                         # If it isn't a clean scaling down
@@ -170,11 +168,11 @@ class SrGen:
 
             elif save:
                 fname_h = self.HR_out_dir + im
-                self.save_image(fname_h, im_h)
+                self.save_image(fname_h, im_h, verbose)
                 fnames_h.append(fname_h)
                 if self.template['resolution']:# != None:
                     fname_l = self.LR_out_dir + im
-                    self.save_image(fname_l, im_l)
+                    self.save_image(fname_l, im_l, verbose)
                     fnames_l.append(fname_l)
 
 
@@ -192,18 +190,29 @@ class SrGen:
 
         if fil_typ == '.png':
             # If file is a png
-            img = np.array(Image.open(im_path))
+            with Image.open(im_path) as f_im:
+                img = np.array(f_im)
+
+            print(f'Loading {im_path} as png')
             if verbose:
-                print(f'Loading {im_path} as png')
                 print(f'Image shape:{img.shape}')
 
             if self.template['unit'] == 'intensity':
-                img = self.rgb2ycrbcr(img)
-                img = img[:,:,0] #Just deal with intensity values at the moment because 
-                                 # having multiple channels throws off cv2 when saving, 
-                                 # since it also does BGR instead of RGB and will save a blue image
+                if len(img.shape)==3:
+                    img = self.rgb2ycrbcr(img)
+                    img = img[:,:,0] #Just deal with intensity values at the moment because 
+                                    # having multiple channels throws off cv2 when saving, 
+                                    # since it also does BGR instead of RGB and will save a blue image
+                elif len(img.shape)==2:
+                    pass            # If the png is just greyscale, then there is nothing that can
+                                    # be done except take the single channel
+                else:
+                    raise ImportError("Provided png image is not 2 or 3 dimensional, something is wrong with the image.")
+
             elif self.template['unit'] == 'color':
-                pass
+                raise NotImplementedError("""Loading and creation of patches from color png images is
+                currently not supported. Please use template['unit']='intensity' for conversion of png
+                imges to greyscale intesity images.""")
 
         elif fil_typ == '.nii' or fil_typ == '.gz':
             img = nib.load(im_path).get_fdata()
@@ -333,12 +342,11 @@ class SrGen:
 
         return opp, im_h
 
-    def img2patches(self, im_h, fname, same_size=True, keep_blank=False, slice_select=None, save=False, sanity_check=False):
+    def img2patches(self, im_h, fname, same_size=True, keep_blank=False, slice_select=None, save=False, sanity_check=False, verbose=False):
         # Depending on the number of dimenions in the `patch` value, either make 2D
         # or 3D images
 
         dim = im_h.shape
-        print(f'shape of image = {dim}')
         patch_size = self.template['patch'][:]
         step = self.template['step'][:]
 
@@ -360,16 +368,17 @@ class SrGen:
         if not same_size:
             try: 
                 patch_size = [math.floor(x) for x in np.divide(patch_size,self.template['resolution'])]
-                print(f'patch size = {patch_size}')
-            except: raise ValueError(f'Resolution change coefficient: {self.template["resolution"]} not defined properly for patch_size: {patch_size}')
+            except: 
+                raise ValueError(f'Resolution change coefficient: {self.template["resolution"]} not defined properly for patch_size: {patch_size}')
 
             try: 
                 step = [math.floor(x) for x in np.divide(step,self.template['resolution'])]
-                print(f'step size = {step}')
-            except: raise ValueError(f'Resolution change coefficient: {self.template["resolution"]} not defined properly for step: {step}')
+            except:
+                raise ValueError(f'Resolution change coefficient: {self.template["resolution"]} not defined properly for step: {step}')
         else:
-            print(f'patch size = {patch_size}')
-            print(f'step size = {step}')
+            if verbose:
+                print(f'patch size = {patch_size}')
+                print(f'step size = {step}')
 
         # Create a numpy stack following Pytorch protocols, so 1 dimension more than patch
         
@@ -381,13 +390,15 @@ class SrGen:
 
         # Get total number of patches that will be created:
         #patch_count = np.prod([len(range(0,i,step[idx])) for idx, i in enumerate(dim)])
-        print(f'patch guess = {np.prod([math.floor((i-patch_size[idx])/step[idx])+1 for idx,i in enumerate(dim)])}')
+        if verbose:
+            print(f'patch guess = {np.prod([math.floor((i-patch_size[idx])/step[idx])+1 for idx,i in enumerate(dim)])}')
         patch_count = np.prod([math.floor((i-patch_size[idx])/step[idx])+1 for idx,i in enumerate(dim)])
         patch_vol = math.prod(patch_size)*self.template['blank_ratio']
 
         if len(dim) == 2:
-            stack = np.zeros(patch_count,patch_size[0],patch_size[1])
-            print(f'stack size = {stack.shape}')
+            stack = np.zeros((patch_count,patch_size[0],patch_size[1]))
+            if verbose:
+                print(f'stack size = {stack.shape}')
 
             for i in range(0,dim[0],step[0]):
                 for j in range(0,dim[1],step[1]):
@@ -439,10 +450,10 @@ class SrGen:
         if save:
             if slice_select:
                 for idx, i in tqdm(enumerate(slice_select)):
-                    self.save_image(fnames[idx], stack[i], verbose=False)
+                    self.save_image(fnames[idx], stack[i], verbose)
             else:
                 for idx, i in tqdm(enumerate(fnames)):
-                    self.save_image(i,stack[idx], verbose=False)
+                    self.save_image(i,stack[idx], verbose)
             if sanity_check:
                 print(f'Number of patches: {len(not_blank)}')
                 print(f'Number of blank patches: {blank}')
@@ -505,7 +516,8 @@ class SrGen:
             # Check that you aren't saving a 3D image
             #TODO: Scale inputs to [0,255] so data isn't lost/image isn't saturated
             cv2.imwrite(f'{fname}',im)
-            print(f'Saving: {fname}')
+            if verbose:
+                print(f'Saving: {fname}')
         elif form == 'nii':
 
             # TODO: Add option to transpose image for some reason because mricron hates the first dim[0] = 1
