@@ -361,6 +361,12 @@ class SrGen:
         if type(patch_size) != list:
             patch_size = [patch_size for _ in range(len(dim))]
         
+        #If they provide a patch size of -1 along a dimension, use the size from dim
+        for idx, i in enumerate(patch_size): 
+            if i == -1:
+                patch_size[idx] = dim[idx]
+        
+        #TODO: add option of step size is 0 for full image patch size
         if type(step) != list:
             step = [step for _ in range(len(dim))]
 
