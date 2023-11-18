@@ -44,5 +44,8 @@ For a more detailed description on what is done in this model, read the report I
 
 ./image_generation.ipynb : notebook for generating training and testing image patches from both pngs and nii files
 
+./main.ipynb: notebook for the implementation of the model on the Set14 png image set as well as the ABIDEII-BNI1 mri dataset
+
 ./MRI_SCN.ipynb : notebook containing both the BSD100 trained model and the MRI-trained model, also includes the training and testing functions
+
 ```
